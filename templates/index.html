@@ -1,1 +1,50 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Text & Bild Generator</title>
+    <style>
+        body { font-family: sans-serif; padding: 2em; background: #f7f7f7; }
+        textarea, input[type="text"] { width: 100%; margin-bottom: 10px; }
+        button { padding: 10px 20px; margin-top: 10px; }
+        .response, .image { margin-top: 20px; background: #fff; padding: 1em; border-radius: 8px; box-shadow: 0 0 5px #ccc; }
+    </style>
+</head>
+<body>
+    <h1>Text & Bild Generator mit GPT-4o</h1>
+    <form method="post" enctype="multipart/form-data">
+        <label>Prompt (Frage oder Bildidee):</label><br>
+        <textarea name="user_input" placeholder="z. B. Erstelle ein Bild von einer Katze im Comicstil...">{{ request.form.get('user_input', '') }}</textarea><br>
 
+        <label>Modus wählen:</label><br>
+        <label><input type="radio" name="mode" value="text" {% if mode == 'text' %}checked{% endif %}> Nur Text generieren</label>
+        <label><input type="radio" name="mode" value="image" {% if mode == 'image' %}checked{% endif %}> Bild generieren (optional mit Upload)</label><br><br>
+
+        <label>Bild hochladen (nur für Bildmodus):</label><br>
+        <input type="file" name="file"><br><br>
+
+        <button type="submit">Absenden</button>
+    </form>
+
+    {% if response %}
+    <div class="response">
+        <h3>Antwort:</h3>
+        <p>{{ response }}</p>
+    </div>
+    {% endif %}
+
+    {% if uploaded_file_info %}
+    <div class="response">
+        <h3>Dateiinfo:</h3>
+        <p>{{ uploaded_file_info }}</p>
+    </div>
+    {% endif %}
+
+    {% if image_url %}
+    <div class="image">
+        <h3>Generiertes Bild:</h3>
+        <img src="{{ image_url }}" alt="Generiertes Bild" width="512">
+    </div>
+    {% endif %}
+</body>
+</html>
